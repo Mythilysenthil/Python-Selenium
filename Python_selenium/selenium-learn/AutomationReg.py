@@ -16,9 +16,7 @@ driver.find_element(By.XPATH, "//input[@data-qa='signup-email']").send_keys("myt
 driver.find_element(By.XPATH, "//button[text()='Signup']").click()
 
 try:
-    actual_element = wait.until(
-        EC.visibility_of_element_located((By.XPATH, "//b[text()='Enter Account Information']")))
-    
+    actual_element = wait.until(EC.visibility_of_element_located((By.XPATH, "//b[text()='Enter Account Information']")))   
     actual = actual_element.text
     print("Actual Text =", actual)
     assert actual.upper() == "ENTER ACCOUNT INFORMATION"
@@ -50,25 +48,27 @@ driver.find_element(By.XPATH, "//input[@id='zipcode']").send_keys("636003")
 driver.find_element(By.XPATH, "//input[@id='mobile_number']").send_keys("1234567890")
 driver.find_element(By.XPATH, "//button[text()='Create Account']").click()
 
-accCreate_element = wait.until(
-    EC.visibility_of_element_located((By.XPATH, "//b[text()='Account Created!']")))
-
-accCreate = accCreate_element.text
+accCreateElement = wait.until(EC.visibility_of_element_located((By.XPATH, "//b[text()='Account Created!']")))
+accCreate = accCreateElement.text
 print("Account Created Text =", accCreate)
 assert accCreate.upper() == "ACCOUNT CREATED!"
 print("Account created successfully")
 
-driver.find_element(By.XPATH, "//a[@class='btn btn-primary']").click()
+conbtn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@class='btn btn-primary']")))
+conbtn.click()
+print("Continue button clicked")
+print("Current URL =", driver.current_url)
+print("Page Title =", driver.title)
 
-delete = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@href='/delete_account']")))
-if delete.is_displayed():
-    delete.click()
-    print("Delete Button clicked")
+time.sleep(5)
+wait.until( EC.visibility_of_element_located((By.XPATH, "//a[contains(text(),'Logged in as')]")))
+deletebtn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@href='/delete_account']")))
+driver.execute_script("arguments[0].click();", deletebtn)
 
-conform = wait.until(
-    EC.visibility_of_element_located((By.XPATH, "//b[text()='Account Deleted!']")))
-print("Account Deleted Text =", conform.text)
-assert conform.text.upper() == "ACCOUNT DELETED!"
+print("Delete Button clicked")
+confirm = wait.until(EC.visibility_of_element_located((By.XPATH, "//b[text()='Account Deleted!']")))
+print("Account Deleted Text =", confirm.text)
+assert confirm.text.upper() == "ACCOUNT DELETED!"
 print("Account Deleted successfully")
 
 driver.quit()
